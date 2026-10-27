@@ -1,0 +1,17 @@
+wrote expanded/figs/Nc3_HA3_expanded_3corners_digits.pdf
+c1   native, Re     median  1.9   >=8:   8%   >=12:   2%   max 16.0   worst  -1.1   chopped 0
+c1   native, Im     median  2.6   >=8:  10%   >=12:   3%   max 16.0   worst  -0.3   chopped 0
+c1   Bernoulli, Re  median  3.1   >=8:  15%   >=12:   4%   max 16.0   worst  -0.7   chopped 0
+c1   Bernoulli, Im  median  4.0   >=8:  19%   >=12:   6%   max 16.0   worst  -0.4   chopped 0
+c2   native, Re     median  4.5   >=8:  18%   >=12:   6%   max 16.0   worst   1.6   chopped 0
+c2   native, Im     median  5.6   >=8:  25%   >=12:   8%   max 16.0   worst   3.0   chopped 0
+c2   Bernoulli, Re  median  6.0   >=8:  30%   >=12:  12%   max 16.0   worst   1.8   chopped 0
+c2   Bernoulli, Im  median  7.0   >=8:  39%   >=12:  14%   max 16.0   worst   3.8   chopped 0
+c3   native, Re     median  2.2   >=8:   9%   >=12:   2%   max 16.0   worst  -1.5   chopped 0
+c3   native, Im     median  2.7   >=8:  12%   >=12:   4%   max 16.0   worst  -0.3   chopped 0
+c3   Bernoulli, Re  median  3.6   >=8:  18%   >=12:   6%   max 16.0   worst  -1.3   chopped 0
+c3   Bernoulli, Im  median  4.3   >=8:  23%   >=12:   9%   max 16.0   worst  -0.3   chopped 0
+best native, Re     median  6.7   >=8:  35%   >=12:  11%   max 16.0   worst   3.6   chopped 0
+best native, Im     median  7.9   >=8:  48%   >=12:  15%   max 16.0   worst   4.2   chopped 0
+best Bernoulli, Re  median  8.9   >=8:  60%   >=12:  22%   max 16.0   worst   4.8   chopped 0
+best Bernoulli, Im  median  9.9   >=8:  73%   >=12:  29%   max 16.0   worst   5.2   chopped 0

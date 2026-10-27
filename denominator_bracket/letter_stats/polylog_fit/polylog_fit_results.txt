@@ -1,0 +1,65 @@
+POLYLOGARITHMIC FUNCTION SPACE OF THE eps^0 REMAINDERS  (symbol level, modulo products)
+zj.fullcolor / denominator_bracket, 84 amplitudes;  x=s, y=t, z=u, s+t+u=1;  rho = sqrt(-s t u)
+==========================================================================================
+
+Method
+  Each eps^0 coefficient = sum_i R_i(t,u) F_i with pure functions F_i.  For every amplitude the
+  pure functions at each weight are sampled exactly (rational prefactors evaluated at random
+  points mod p) and their symbols are projected mod products (rho).  A candidate set of
+  functions is "sufficient" if every sampled pure function lies in its span.  Spans are compared
+  through random linear sketches (exact arithmetic mod p = 1048573; sketch dimension always
+  well above the total rank; negative controls fail as they should).
+  Symbols of the candidate functions are computed from Goncharov's recursion for G(a1..an;1),
+  checked by the stuffle identity (depth 2) and by integrability on the alphabet (depth 2, 3).
+
+Arguments (arguments_all.txt)
+  216 rational: 36 anharmonic orbits, x and 1-x products of letters 1-6, 11-16
+  84 algebraic: from S-unit identities with rho, e.g. (su+rho) - rho = su,
+                (su+rho) + (st-rho) = s(1-s);  odd letters l7, l8 appear through them
+                (the third phase (tu-rho)/(tu+rho) = +-1/(l7 l8) gives nothing new)
+  3864 pairs (x1,x2) with x1, x2, x1*x2 admissible;  3600 rational triples with
+  x1, x2, x3, x1x2, x2x3, x1x2x3 admissible.
+
+Results
+  weight 1-3   all 84 amplitudes:  logs, Li_2, Li_3 of the admissible arguments
+               (bare w3 needs only the 9 linear orbits; I*w3 needs the algebraic ones)
+  weight 4     all 84 amplitudes (bare and Pi^2 parts):  Li_4 + Li_{2,2}
+               non-classical dimension mod Li_4: 31;  sufficient list: w4_Li22_used.txt
+  weight 5     all 72 amplitudes:  Li_5 + Li_{3,2} + Li_{2,2,1}
+               depth 2 alone leaves 5 directions (C0F0Z1, C2F0Z1, C0F1Z0, C8F0Z1) that
+               need the depth-3 function Li_{2,2,1};  non-classical dim mod Li_5: 69
+               sufficient list: w5_functions_used.txt (not minimized)
+  weight 6     52 amplitudes.  Outside Li_6: 9 directions (amplitudes without l7/l8) + 15 (C1/C7/C9F0Z0).
+               * Depth 3 is UNAVOIDABLE (for any arguments): (delta_22 x 1) delta_42 != 0 on all 24
+                 directions, and this component vanishes identically for every depth<=2 function
+                 (checked: 0 for Li_6, Li_{4,2}, Li_{3,3}).
+               * That depth-3 obstruction is reproduced exactly by Li_{2,2,2}(x1,x2,x3) on admissible triples.
+               * BUT the full weight-6 symbol is NOT reached by
+                   Li_6 (300 args) + all depth-2 Li_{a,b} (3864 pairs)
+                   + Li_{2,2,2} (all 3600 rational triples) + the other nine depth-3 compositions (600 triples)
+                   + combinations of depth-2 functions whose spurious letter 1-x1x2 cancels
+                     (1500 largest product classes: +428 dimensions)
+                 (none of the 24 directions is reached, already at the level of delta_42 + delta_33).
+               => open: needs depth-3 functions with arguments outside this admissible set
+                  (e.g. spurious letters cancelling between depth-3 terms, or algebraic triples).
+
+Files
+  arguments_all.txt, w4_Li22_used.txt, w5_functions_used.txt, ext_args.json (arguments, pairs, names),
+  triples.json, scripts/ (pipeline; see README.txt there)
+
+Weight 6: which letters carry the uncovered directions?  (letter knock-out, 2026-10-27)
+  Test: project data AND all candidates (Li_6, Li_{4,2} on 3864 pairs, Li_{2,2,2} on 466 triples)
+  onto words avoiding some letters, and recount the uncovered directions.
+  Uncovered per structure without projection: C0F0Z1 4, C0F1Z0 2, C2F0Z1 4, C3F0Z0 1, C8F0Z1 2,
+  C8F1Z0 2 (together 9);  C1F0Z0 5, C7F0Z0 5, C9F0Z0 5 (together 15).
+    words kept                              uncovered (non-alg / alg)
+    all letters                             9 / 15
+    any single letter removed (each of 14)  9 / 15     -> not tied to one letter
+    no quadratic letters                    9 / 15
+    no l7, l8                               9 / 15
+    ONLY linear letters 1-6                 9 / 15     -> whole gap visible in the two-loop alphabet
+    no 1-s, 1-t, 1-u                        2 / 14     (left: C0F0Z1 2, C2F0Z1 2)
+    s,t,u + quadratic only                  2 / 11
+    s,t,u + l7,l8 only                      0 / 4
+  => the missing weight-6 functions are already needed for the 2dHPL (letters 1-6) part;
+     C3F0Z0 gives a single direction made of letters 1-6 only: the cleanest test case.

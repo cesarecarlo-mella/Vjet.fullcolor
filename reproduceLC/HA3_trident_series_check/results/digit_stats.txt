@@ -1,0 +1,21 @@
+N=18 corner 1, $(x,y)\to0$            Re: median 4.1, >=8:  24%, >=12:  10%, max 15.3, worst 0.1, chopped 0
+N=18 corner 1, $(x,y)\to0$            Im: median 4.8, >=8:  26%, >=12:  11%, max 16.0, worst -0.5, chopped 0
+N=18 corner 2, $(y,z)\to0$            Re: median 7.3, >=8:  43%, >=12:  17%, max 15.9, worst 2.0, chopped 0
+N=18 corner 2, $(y,z)\to0$            Im: median 8.1, >=8:  50%, >=12:  21%, max 16.0, worst 3.4, chopped 0
+N=18 corner 3, $(x,z)\to0$            Re: median 4.3, >=8:  23%, >=12:   9%, max 15.0, worst -1.0, chopped 0
+N=18 corner 3, $(x,z)\to0$            Im: median 5.1, >=8:  27%, >=12:  11%, max 16.0, worst -0.5, chopped 0
+N=18 best of the three corners        Re: median 10.6, >=8:  89%, >=12:  36%, max 15.9, worst 6.4, chopped 0
+N=18 best of the three corners        Im: median 11.4, >=8:  96%, >=12:  43%, max 16.0, worst 7.3, chopped 0
+N=18 HA3 series (GPLs), corner 1      Re: median 3.1, >=8:  19%, >=12:   8%, max 16.0, worst -0.0, chopped 0
+N=18 HA3 series (GPLs), corner 1      Im: median 4.2, >=8:  24%, >=12:  10%, max 16.0, worst -0.4, chopped 0
+N=20 corner 1, $(x,y)\to0$            Re: median 4.5, >=8:  28%, >=12:  13%, max 15.4, worst 0.3, chopped 0
+N=20 corner 1, $(x,y)\to0$            Im: median 5.2, >=8:  30%, >=12:  14%, max 16.0, worst -0.5, chopped 0
+N=20 corner 2, $(y,z)\to0$            Re: median 7.9, >=8:  48%, >=12:  22%, max 16.0, worst 2.1, chopped 0
+N=20 corner 2, $(y,z)\to0$            Im: median 8.7, >=8:  56%, >=12:  26%, max 16.0, worst 3.5, chopped 0
+N=20 corner 3, $(x,z)\to0$            Re: median 4.7, >=8:  28%, >=12:  12%, max 15.0, worst -0.9, chopped 0
+N=20 corner 3, $(x,z)\to0$            Im: median 5.4, >=8:  31%, >=12:  14%, max 16.0, worst -0.5, chopped 0
+N=20 best of the three corners        Re: median 11.6, >=8:  96%, >=12:  47%, max 16.0, worst 7.0, chopped 0
+N=20 best of the three corners        Im: median 12.4, >=8:  99%, >=12:  54%, max 16.0, worst 7.8, chopped 0
+c1 cancellation factor sum|R T| / |sum|: median Re 2.1e+05, Im 1.2e+03; max Re 2.7e+07, Im 5.4e+04
+c2 cancellation factor sum|R T| / |sum|: median Re 2.1e+05, Im 1.2e+03; max Re 2.6e+07, Im 2.9e+04
+c3 cancellation factor sum|R T| / |sum|: median Re 2.1e+05, Im 1.2e+03; max Re 2.9e+07, Im 5.6e+04

@@ -1,0 +1,24 @@
+# OS / Python
+.DS_Store
+__pycache__/
+*.pyc
+
+# Large data (kept locally, not versioned)
+/data/
+/poles/**/*.m
+
+# Bulky generated files
+*.zst
+*.mx
+*.pkl
+*.log
+
+# Python environment and blow-up series results
+.venv/
+venv/
+/blowup_series/families/*/dist_*/
+
+# generator evaluator: build products (the sources and third_party.tar.gz are versioned)
+/iter int /generators_deq/cpp/tridents_bs
+/iter int /generators_deq/cpp/third_party/
+!/iter int /generators_deq/out/system.pkl

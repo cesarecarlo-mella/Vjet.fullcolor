@@ -1,0 +1,1 @@
+<|"blowup" -> "y = t*x^2", "corner" -> 4, "W" -> 2, "BIG" -> x, "SMALL" -> y, "ORDt" -> 25, "ORDy" -> 75, "active" -> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}, "oddSign" -> <|7 -> 1, 8 -> 1|>, "maxReldiff" -> 1.53e-39, "builder" -> "build_letters.py"|>
