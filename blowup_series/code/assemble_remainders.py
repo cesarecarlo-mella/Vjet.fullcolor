@@ -207,18 +207,25 @@ def inv_series(Dt, p, ne, nm):
     return C
 
 
-def conv_matrix(S2, ne, nm, p):
-    """the matrix of X -> X * S2 (2-d series product, truncated), balanced float64"""
-    n = ne * nm
-    C4 = np.zeros((ne, nm, ne, nm))
+def toeplitz_stack(S2, ne, nm, p):
+    """X -> X * S2 (2-d series product, truncated) row by row: T[di][j, J] = S2[di, J - j] (J >= j), balanced float64"""
     Sb = np.where(S2 > p // 2, S2 - p, S2).astype(np.float64)
+    T = np.zeros((ne, nm, nm))
+    for dj in range(nm):
+        r = np.arange(nm - dj)
+        T[:, r, r + dj] = Sb[:, dj][:, None]
+    return T
+
+
+def series_product(Xb, T, p):
+    """Xb (ntags, ne, nm) balanced float64 times the series of T -> int64 mod p (each product sums nm terms: exact)"""
+    ntg, ne, nm = Xb.shape
+    out = np.zeros((ntg, ne, nm), np.int64)
     for di in range(ne):
-        for dj in range(nm):
-            v = Sb[di, dj]
-            if v:
-                ii, jj = np.meshgrid(np.arange(ne - di), np.arange(nm - dj), indexing='ij')
-                C4[ii, jj, ii + di, jj + dj] = v
-    return C4.reshape(n, n)
+        if T[di].any():
+            part = np.remainder(Xb[:, :ne - di, :] @ T[di], p).astype(np.int64)
+            out[:, di:, :] = (out[:, di:, :] + part) % p
+    return out
 
 
 def bal(x, p):
@@ -262,7 +269,7 @@ def contract(job):
     """prime k: the residues of the layers li in todo -> cache files"""
     k, todo = job
     p = pc.PRIME_TABLE[k]
-    c, NA, MA, QT, QB, CHUNK = _G['c'], _G['NA'], _G['MA'], _G['QT'], _G['QB'], _G['CHUNK']
+    c, NA, MA, QT, QB = _G['c'], _G['NA'], _G['MA'], _G['QT'], _G['QB']
     rat, dtil = _G['rat'], _G['dtil']
     F = {w: pc.load_residues(fcache(c, w, k)) for w in _G['idx']}
     Fb = {w: {tag: bal(v, p) for tag, v in F[w].items()} for w in F}
@@ -285,7 +292,7 @@ def contract(job):
                     if v:
                         S3[i:, j:] = (S3[i:, j:] + v * S2[:NA - i, :MA - j]) % p
                 S2 = S3
-            Cm[(dk, half)] = conv_matrix(S2, NA, MA, p)
+            Cm[(dk, half)] = toeplitz_stack(S2, NA, MA, p)
         return Cm[(dk, half)]
 
     for li in todo:
@@ -336,14 +343,10 @@ def contract(job):
         A = {}
         for (dk, half), Xd in X.items():
             tg2s = list(Xd)
-            M = np.stack([bal(Xd[tg], p).reshape(-1) for tg in tg2s])
-            C_ = cmat(dk, half)
-            R = np.zeros((len(tg2s), NA * MA), np.int64)
-            for c0 in range(0, NA * MA, CHUNK):                    # exact: each partial sum < CHUNK (p/2)^2 < 2^53
-                R = (R + np.remainder(M[:, c0:c0 + CHUNK] @ C_[c0:c0 + CHUNK], p).astype(np.int64)) % p
-            for tg, row in zip(tg2s, R):
+            R = series_product(np.stack([bal(Xd[tg], p) for tg in tg2s]), cmat(dk, half), p)
+            for tg, blk in zip(tg2s, R):
                 acc = A.get(tg)
-                A[tg] = row.reshape(NA, MA) if acc is None else (acc + row.reshape(NA, MA)) % p
+                A[tg] = blk if acc is None else (acc + blk) % p
         pc.save_residues({tg: v[None] for tg, v in A.items() if v.any()}, acache(c, li, k))
     return k, True
 
@@ -422,11 +425,10 @@ for c in [int(s) for s in a.charts.split(',')]:
         if a.order > N:
             sys.exit('order %d needs the ITER series to %d/%d (have %d/%d)' % (a.order, a.order - s2T // 2, 3 * a.order - s2B // 2, ORDt, ORDy))
         N = a.order
-    CHUNK = 2 ** 53 // (pc.PRIME_TABLE[0] // 2 + 1) ** 2 - 1        # float64 products stay exact in chunks of this size
-    assert max(len(v) for v in idx.values()) < CHUNK
+    assert (max(len(v) for v in idx.values()) + MA) * (pc.PRIME_TABLE[0] // 2) ** 2 < 2 ** 53   # exact float64 products
     lo = physical_bound(c)
     lo = [lo[0] - 1, lo[1] - 1]                                # 1/r: -1/2 in SMALL and in BIG (exp2 units)
-    _G.update(c=c, NA=NA, MA=MA, CHUNK=CHUNK, QT=QT, QB=QB, rat=rat, dtil=dtil, idx=idx, u12=sqrt_inv_U(NA, MA))
+    _G.update(c=c, NA=NA, MA=MA, QT=QT, QB=QB, rat=rat, dtil=dtil, idx=idx, u12=sqrt_inv_U(NA, MA))
     os.makedirs(WORK, exist_ok=True)
     print('=== corner %s (chart %d, variables %s, %s): %d layers; poles T^%s B^%s -> final order N = %d; ITER series %d/%d; '
           '%d denominators  (%.1fs)' % (pt_, c, sm, bg, len(LAYERS), mpq(s2T, 2), mpq(s2B, 2), N, ORDt, ORDy, len(dtil), time.time() - t0), flush=True)
