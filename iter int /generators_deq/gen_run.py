@@ -1,6 +1,6 @@
 """generators: build the closed system, start values at c1 (both nested regularisations), carry them to P0 with
 tridents_bs, compare, write the production data file.   usage: gen_run.py Generators.wl outdir"""
-import pickle, subprocess, sys, time
+import json, os, pickle, subprocess, sys, time
 import numpy as np
 import iisys
 
@@ -13,6 +13,7 @@ S = iisys.build(funcs)
 NT = len(funcs)
 print('built in %.1fs' % (time.time() - t0))
 pickle.dump(S, open('%s/system.pkl' % out, 'wb'))
+json.dump(dict(names=S['names'], wt=[int(w) for w in S['wt']], dims=S['dims']), open('%s/meta.json' % out, 'w'))
 
 
 def run(fn, pts, tol=1e-13, delta=(0.1, 0.2)):
@@ -70,3 +71,18 @@ T = V[:, :NT].copy()
 iisys.export(S, '%s/generators_bs.bin' % out, P0, yv, T)
 np.save('%s/P0_values.npy' % out, gens(V))
 print('wrote %s/generators_bs.bin' % out)
+
+# the start values from the y-first regularisation, for the error estimate: only the head of the file (magic, sizes,
+# P0, start values) differs, the system blocks are the same; gen_eval.second_data() rebuilds the full file from it
+V = at['y', (0.1, 0.2)]
+yv = {0: np.array([1.0 + 0j])}
+for w in range(1, 6):
+    o = NT + sum(dims[1:w])
+    yv[w] = V[w, o:o + dims[w]]
+iisys.export(S, '%s/generators_bs_y.tmp' % out, P0, yv, V[:, :NT].copy())
+nhead = 8 + 12 + 4 * len(dims) + 16 + 16 + 16 * sum(dims) + 16 * 7 * NT
+a, b = open('%s/generators_bs.bin' % out, 'rb').read(), open('%s/generators_bs_y.tmp' % out, 'rb').read()
+assert len(a) == len(b) and a[nhead:] == b[nhead:], 'the two files differ beyond the start values'
+open('%s/start_y.head' % out, 'wb').write(b[:nhead])
+os.remove('%s/generators_bs_y.tmp' % out)
+print('wrote %s/start_y.head (%d bytes)' % (out, nhead))

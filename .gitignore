@@ -21,4 +21,6 @@ venv/
 # generator evaluator: build products (the sources and third_party.tar.gz are versioned)
 /iter int /generators_deq/cpp/tridents_bs
 /iter int /generators_deq/cpp/third_party/
-!/iter int /generators_deq/out/system.pkl
+/iter int /generators_deq/out/start_*.bin
+/iter int /generators_deq/out/generators_bs_y.bin
+/dist/

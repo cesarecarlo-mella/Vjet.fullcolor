@@ -48,7 +48,7 @@ for label, P in (('60 random points', pts), ('near edges/corners', edge)):
 
 # (iii) direct series at the near-edge points of the start construction
 for base, eps, edge_v in (('x', 0.01, 0.4), ('y', 0.01, 0.4), ('x', 0.005, 0.7)):
-    pt, yv, T = iisys.start_values(S, base, edge=edge_v, eps=eps)
+    pt, yv, T = iisys.start_values(S, base, edge=edge_v, eps=eps, N=100)        # 60 terms are not enough at y = 0.7
     ser = np.array([T[w, i] for i, w in enumerate(wt)])
     (_, _, v), = run([pt], 1e-13)
     print('direct c1 series (%s-first) at %s vs BS from P0: worst rel diff %.1e' % (base, pt, rel(v, ser).max()))

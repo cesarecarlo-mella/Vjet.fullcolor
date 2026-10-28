@@ -61,13 +61,15 @@ def build(funcs, verbose=True):
     top = max(wt)
     assert top <= 6
     basis = {}                                       # w -> list of exact vectors (dict word -> Fraction)
+    origin = {}                                      # w -> index of the input each basis function is (None: a strip)
     above = []
     for w in range(top, 0, -1):
-        cand = [f for (_, f), n in zip(funcs, wt) if n == w]
+        gidx = [i for i, n in enumerate(wt) if n == w]
+        cand = [funcs[i][1] for i in gidx]
         ngen = len(cand)
         cand += [g for f in above for k in range(1, NL + 1) for g in [strip(f, k)] if g]
-        piv, keep = [], []
-        for f in cand:
+        piv, keep, src = [], [], []
+        for ic, f in enumerate(cand):
             r = {word: modp(c) for word, c in f.items()}
             for col, pr in piv:
                 if r.get(col):
@@ -80,13 +82,16 @@ def build(funcs, verbose=True):
                 inv = pow(r[col], P - 2, P)
                 piv.append((col, {c: v * inv % P for c, v in r.items()}))
                 keep.append(f)
+                src.append(gidx[ic] if ic < ngen else None)
         basis[w] = keep
+        origin[w] = src
         above = keep
         if verbose:
             print('  weight %d: %3d functions (%d inputs)' % (w, len(keep), ngen), flush=True)
     for w in range(top + 1, 6):
-        basis[w] = []
+        basis[w] = []; origin[w] = []
     basis[0] = [{(): Fraction(1)}]
+    origin[0] = [None]
     # word supports and orthonormal bases (weights 0..5)
     sup, Q = {}, {}
     for w in range(0, 6):
@@ -149,7 +154,7 @@ def build(funcs, verbose=True):
         print('  dims', dims, ' closure residual %.1e' % worst)
         print('  max |A| entry %.3f, max |R| entry %.3g' % (max(np.abs(a).max() if a.size else 0 for a in A.values()),
                                                            max(np.abs(r).max() for r in R.values())))
-    return dict(dims=dims, A=A, R=R, wt=np.array(wt), const=const, names=[n for n, _ in funcs], basis=basis)
+    return dict(dims=dims, A=A, R=R, wt=np.array(wt), const=const, names=[n for n, _ in funcs], basis=basis, origin=origin)
 
 
 # ---------------------------------------------------------------- 1-d series of the forms along a line

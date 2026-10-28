@@ -1,3 +1,5 @@
+(* ::Package:: *)
+
 {
 Pi^2,
 Pi^4,
@@ -11,7 +13,7 @@ I*Pi*Zeta[3],
 I*Pi^5,
 Pi^6,
 Zeta[3]^2,
-I,
+I/r,
 I*Pi^3*Zeta[3],
 I*Pi*Zeta[5]
 }

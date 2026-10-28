@@ -11,6 +11,8 @@ Full-colour V+jet helicity amplitudes, and their series expansions at the three 
 | `denominator_bracket/` | Helicity coefficients, denominator-bracket form (+ `letter_stats/`). |
 | `Zgqq_finite_remainders/` | All 84 finite remainders: `FiniteRemainders/alpha1-3` = HA1-3 and `gamma1-3` = HA4-6, each with 14 colour layers. Each row {r, g, m, q} means q * `RationalFunctionBasis[r]` * `Generators[g]` * `TranscendentalMultipliers[m]`. The generators are II combinations over `Alphabet20.wl` (= the usual alphabet with t = y, u = z). They replace `remainder_denominator_bracket/` (identical content, checked exactly). `reproduceLC` still reads the old folder; restore it with `git checkout 9059ae2 -- remainder_denominator_bracket`. |
 | `reproduceLC/` | Leading-colour reproduction and HA3 series checks. |
+| `package/` | The shippable evaluator **Zgqq_evaluator**: `python3 package/build_dist.py` assembles `dist/Zgqq_evaluator-<version>/` and its tarball (8.5 MB) from `package/`, `iter int /generators_deq` and `Zgqq_finite_remainders`. See `package/README.md`. |
+| `iter int /generators_deq/` | Closed DE of the 579 generators (503 functions) and the numerical evaluator: `remainder_eval.py` gives all 84 finite remainders at any point of the decay triangle (0.05 s per point, about 1e-12). See its README. |
 | `blowup_series/` | Master series of all 22 families in blow-up variables (array/modular pipeline, cluster-ready). See its README. |
 | `tools/` | Physical-variable series converters: JSON -> Mathematica lists (`convert_*`), extraction of a `Trident[i, w]` selection (`extract_trident_selection.py`, `trident_selection.m`). |
 | `poles/` | Pole predictions and checks (the large `.m` files are not in git). |
