@@ -43,7 +43,7 @@ Everything is transported out of that corner.
    - G functions in q, from q = 0 (the s = 0 constants) to the regularised limit q -> oo, by inversion.
    - Divergent G(1, ...; 1) are shuffle-regularised; their coefficients must cancel, and the script checks this.
    - Whatever is left as G(...; 1), Catalan or Log[2] is fitted on Q[i Pi, MZV]. The values come from GiNaC at
-     75 digits, and a fit is accepted only below 1e-60.
+     100 digits, and a fit is accepted only below 1e-80.
 
 The scripts stop with `!!` on any failed check:
 - a letter with a pole off {0, 1} on an edge;
@@ -64,7 +64,8 @@ nohup python3 run_transport.py -n 16 > logs/run_transport.log 2>&1 &
 - Each job uses one Mathematica kernel, and `-n` jobs run at a time.
 - It is resumable: a job whose last-weight file exists is skipped. Logs go to `logs/<F>_<A>_<step>.log`.
 - PolyLogTools must be installed, and `ginsh` (GiNaC) must be on the PATH for the fits.
-- Timing for H (371 masters): edge (both s = 0 charts) 1 min; one divisor job about 17 min.
+- Timing: edge jobs 10 s - 2 min each; divisor jobs 1.5 - 26 min each (H about 17 min); the whole divisor batch
+  took 8.4 h on 2 kernels.
 
 ## Validation (exact, all components)
 
@@ -74,6 +75,7 @@ nohup python3 run_transport.py -n 16 > logs/run_transport.log 2>&1 &
 | `bdy_RZ_yv`, `bdy_RZ_xv` vs `bdy_CC2`, `bdy_CC3`, w 0-6 | identical |
 | `bdy_RZ_vy` vs `analytic_continuation/results/bdy_CC2e_H` (divisor transport + MZV fit), w 1-6 | identical (after PolyGamma[3,1/4] + PolyGamma[3,3/4] = 16 Pi^4) |
 | edge jobs, all 22 families x 3 regions | 66/66 ok, every constant in Q[i Pi, Zeta[3], Zeta[5]] |
+| divisor jobs, all 22 families x 3 regions x 2 corners | 132/132 ok (8.4 h on 2 kernels), every constant in Q[i Pi, Zeta[3], Zeta[5]] |
 | `continue_threshold.py` (chart variables) vs direct continuation of the physical series, H, 6 charts, w 1-3 | identical |
 
 `compare.py` (python) and `compare_exact.wls` (Mathematica, reduces the PolyGamma/Hurwitz identities that old files

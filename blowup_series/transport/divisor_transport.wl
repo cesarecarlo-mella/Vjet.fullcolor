@@ -11,7 +11,7 @@
    from the tangential base point q = 0; the s = 1 constants are its regularised limit q -> oo (Log[q] -> 0),
    taken exactly by the inversion q = 1/r (all constants become G(...; 1)).  Divergent G(1, ...; 1) are
    shuffle-regularised (their coefficients must cancel: checked).  Constants that PolyLogTools leaves as G(...; 1),
-   Catalan, Log[2], ... are fitted on Q[i Pi, MZV] (GiNaC values, 75 digits, accepted below 1e-60).
+   Catalan, Log[2], ... are fitted on Q[i Pi, MZV] (GiNaC values, 100 digits, accepted below 1e-80).
 
    usage: wolframscript -file divisor_transport.wl <family inputs dir> <region x|y|z> <b> [WMAX = 6]
    reads <inputs>/bdy_R<A>_<b>v_w<w>.m (edge_transport.wl), writes <inputs>/bdy_R<A>_v<b>_w<w>.m *)
