@@ -1,0 +1,17 @@
+{
+Pi^2,
+Pi^4,
+1,
+I*Pi,
+Zeta[3],
+I*Pi^3,
+Pi^2*Zeta[3],
+Zeta[5],
+I*Pi*Zeta[3],
+I*Pi^5,
+Pi^6,
+Zeta[3]^2,
+I,
+I*Pi^3*Zeta[3],
+I*Pi*Zeta[5]
+}

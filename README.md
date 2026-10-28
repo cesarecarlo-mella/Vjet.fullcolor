@@ -9,12 +9,11 @@ Full-colour V+jet helicity amplitudes, and their series expansions at the three 
 |---|---|
 | `trident_coefficients/` | Helicity coefficients in the trident basis: `C<c>F<f>Z<z>_HA<i>.wl` = sum of rational(t, u) * `Trident[i, w]`, with t = y, u = z. |
 | `denominator_bracket/` | Helicity coefficients, denominator-bracket form (+ `letter_stats/`). |
-| `remainder_denominator_bracket/` | Finite remainders, denominator-bracket form. `reproduceLC/HA_GPL` reads it as `../../remainder_denominator_bracket`, so keep it at the top level. |
+| `Zgqq_finite_remainders/` | All 84 finite remainders: `FiniteRemainders/alpha1-3` = HA1-3 and `gamma1-3` = HA4-6, each with 14 colour layers. Each row {r, g, m, q} means q * `RationalFunctionBasis[r]` * `Generators[g]` * `TranscendentalMultipliers[m]`. The generators are II combinations over `Alphabet20.wl` (= the usual alphabet with t = y, u = z). They replace `remainder_denominator_bracket/` (identical content, checked exactly). `reproduceLC` still reads the old folder; restore it with `git checkout 9059ae2 -- remainder_denominator_bracket`. |
 | `reproduceLC/` | Leading-colour reproduction and HA3 series checks. |
 | `blowup_series/` | Master series of all 22 families in blow-up variables (array/modular pipeline, cluster-ready). See its README. |
 | `tools/` | Physical-variable series converters: JSON -> Mathematica lists (`convert_*`), extraction of a `Trident[i, w]` selection (`extract_trident_selection.py`, `trident_selection.m`). |
 | `poles/` | Pole predictions and checks (the large `.m` files are not in git). |
-| `inversion_reducible/` | Kira reduction targets. |
 | `data/` | Large local data, **not in git**: `download/` (raw zgqq amplitudes), `series_trident_all_weights/` (trident series, JSON, physical variables, order 20), `mathematica-results/` (the same as `.m`, per family and `trident/`), `_xfer/` (transfer copies). |
 
 ## Series of the amplitudes (plan)
