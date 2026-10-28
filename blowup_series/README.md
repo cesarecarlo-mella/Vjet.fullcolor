@@ -143,3 +143,35 @@ chart resolves every letter (after pulling out t^a B^b the rest is nonzero at th
   At x, y -> 0 all 780 terms of the window x, y <= 3 are identical to the independent expansion of
   the GPL form (`reproduceLC/HA_series_Nc3_xy0_order18`, HAser["C3F0Z0", 3]). The Bernoulli files are
   identical to Mathematica's `Series` of the physical ones, at all three points.
+
+## The iterated-integral route: the ITER family -> all 84 remainders
+
+This is an alternative to families + tridents. The 84 finite remainders of `Zgqq_finite_remainders` are written in
+579 iterated-integral generators. Their closed system (586 functions, integer connection, `iter int
+/generators_deq/out/deq.wl`) is expanded like a family, and the remainders are assembled from it directly.
+
+- `families/ITER/`: inputs and README.
+  - `atilde.m`, `sol0.m`, constants:
+    - c1: zero;
+    - c3: chart 3;
+    - c2: **chart 5** (y = t z^2), exact GPL transport, `transport/iter_corner_transport.wl`.
+  - Use charts 1, 3 and 5 only: the c2 constants do not hold in chart 2.
+- `code/assemble_remainders.py`:
+  - the rational functions, generators (`generators.wl`) and constants (I/r included) are multiplied in the blow-up
+    variables of each corner;
+  - reconstruction is exact, with a check that the spurious poles cancel;
+  - output: `<out>/<coefficient>/<layer>/series{c1,c2,c3}.m` and `seriesBer{c1,c2,c3}.m`, in (x, y), (y, z), (x, z).
+- **Order.** The poles are T^-7/2 and B^-21/2, so a final order N needs the ITER series to (N + 4, 3N + 11): 24/72
+  for N = 20.
+- **Validated at N = 4** (`../remainder_series_N4/README.md`):
+  - the Nc^3 layer is identical to the exact series of reproduceLC;
+  - all 84 layers agree with the numerical evaluator near the three corners.
+
+Production (cluster):
+
+    venv/bin/python code/run_array.py -w 6 -n 64 -c 1,3,5 --ordt 24 --ordy 72 --workdir families/ITER/dist_24_72 \
+        --inputs families/ITER/inputs --letters letters --clean-residues
+    venv/bin/python code/assemble_remainders.py --iter families/ITER/dist_24_72 --inputs families/ITER/inputs \
+        --generators "../iter int /generators_deq/out/generators.wl" --zgqq ../Zgqq_finite_remainders \
+        --out ../remainder_series_N20 -n 32
+    venv/bin/python code/validate_remainder_series.py ../remainder_series_N20 c1,c2,c3 0.1

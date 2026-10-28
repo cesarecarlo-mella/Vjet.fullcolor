@@ -32,19 +32,41 @@ above.
 | **system** | 1 | 5 | 24 | 75 | 113 | 261 | 24 | **503** |
 
 - **Linear dependencies.** 92 generators are exact rational combinations of the others of the same weight: 90 at
-  weight 4, and T[570], T[571] at weight 5. The rank is the same modulo two different primes. They need no slot of
-  their own: they are read off at the end, like all the others. `out/dependent.wl` gives them (and T[61] = One)
-  as exact combinations of the basis.
+  weight 4, and T[570], T[571] at weight 5. The rank is the same modulo two different primes. In the numerical system
+  they need no slot of their own: they are read off at the end, like all the others.
 - **Closure.** Weights 1-4 are already closed: the derivatives of the generators stay in their span. Only weight 5
   needs 16 extra functions, from the derivatives of the weight-6 generators.
 - The old 302-function system of the 60 generators lies inside this one, at every weight.
 
-**Exact DE:** dF = Sum_k dlog W_k M[k] . F, with F the 503 functions (`exact_deq.py`):
-- `out/basis.wl`: the functions F in II[...], weight 6 -> 0. At each weight the independent generators come first
-  (with their names), then the extra functions F[5, j]; One = 1.
-- `out/deq.wl`: labels and M[1..20] as SparseArrays, 130914 non-zero entries. Closed and checked word by word.
-- The rationals are large (up to about 120 digits): the strips are expressed in the 113 independent weight-4
-  generators, whose integer coefficients are large.
+**Exact DE** (`integral_basis.py`, redundant at weights 6 and 5): dF = Sum_k dlog W_k M[k] . F. It describes the same
+space of functions as the numerical system, but in a basis chosen for exact work: 586 functions, every entry of M an
+integer.
+
+| weight | functions |
+|---|---|
+| 6 | the 24 generators |
+| 5 | 344: the 247 generators and the 97 distinct strips of the weight-6 generators (redundant, linearly dependent) |
+| 4, 3, 2, 1 | integral lattice bases B[w,i] (113, 75, 24, 5) |
+| 0 | the constant B[0,1] = 1/96 (One = 96 B[0,1]) |
+
+- **The lattice bases.** At weight w, the Z-span of the generators and of the strips of the functions of weight w + 1
+  is computed by an HNF on the coordinates at as many pivot words as the rank, then shortened by LLL. So every
+  generator and every strip is an integer combination of the basis.
+- **The redundancy.** At weights 6 and 5 the system keeps the generators and strips themselves. The 6 -> 5 block then
+  holds only scale factors <= 6.
+  - Without it the weight-5 relations among the generators (coefficients up to 1e8) would enter M.
+  - Making weight 4 redundant as well moves the large numbers down to 4 -> 3 (1.2e6) and costs 2134 functions, so it
+    is not done.
+- **The numbers.** Largest |M| entry 3.5e5, in the 5 -> 4 block; 135142 non-zero entries.
+- **The files.**
+  - `out/basis.wl`: the functions in II[...];
+  - `out/deq.wl`: the labels and M[1..20], 2.1 MB;
+  - `out/generators.wl`: every generator as a combination of the functions.
+  - Every relation is checked exactly, word by word.
+- **The earlier generator basis** (independent generators + 16 strips, 503 functions, `exact_deq.py`) had rationals of
+  90-120 digits in M, from inverting the 113 x 113 matrix of the weight-4 generators. It was replaced on 2026-10-28.
+- **The ITER family.** `family_inputs.py` writes the inputs for the blow-up pipeline from `out/deq.wl`; see
+  `blowup_series/families/ITER/README.md`.
 
 **Numerical gauge:** an orthonormal basis of each weight in word space. The letter blocks are then the strip maps,
 with every entry |A| <= 1.
@@ -176,16 +198,18 @@ The shippable package is assembled from these files by `../../package/build_dist
 | `gen_run.py` | build: system, both regularisations, carry to P0; writes `out/generators_bs.bin`, `out/start_y.head`, `out/meta.json`, `out/system.pkl` |
 | `gen_eval.py` | python interface for the generators: choice of path deformation, average across spurious curves (`plan`, `collapse`) |
 | `remainder_eval.py` | the 84 finite remainders from the generators (averaged as a whole near spurious curves) |
-| `exact_deq.py` | the exact DE (`out/basis.wl`, `out/deq.wl`, `out/dependent.wl`) |
+| `integral_basis.py` | the exact DE in the integral basis (`out/basis.wl`, `out/deq.wl`, `out/generators.wl`) |
+| `family_inputs.py` | the ITER family inputs for the blow-up pipeline (atilde, labels, sol0, c1 constants, edge connections) |
 | `gen_eval_check.py`, `remainder_check.py`, `spurious_check.py`, `trident_check.py` | the checks above (`trident_check.py` reads `2610.anc/trident_basis`) |
 | `out/meta.json` | names, weights and system dimensions (all that `gen_eval.py` needs) |
 | `out/start_y.head` | the head (start values at P0) of the data file built from the y-first regularisation, for the error estimate |
 | `out/generators_bs_y.bin` | that full file, built on first use by `gen_eval.second_data()` (not in git) |
-| `out/system.pkl` | the numerical system: not in git (60 MB), rebuilt by `gen_run.py` in 20 s; needed by `exact_deq.py` and the checks |
+| `out/system.pkl` | the numerical system: not in git (60 MB), rebuilt by `gen_run.py` in 20 s; needed by the checks |
 
 To rebuild everything:
 
 ```sh
 python3 gen_run.py ../../Zgqq_finite_remainders/Generators.wl out        # about 30 s
-python3 exact_deq.py out/system.pkl ../../Zgqq_finite_remainders/Generators.wl out
+python3 integral_basis.py ../../Zgqq_finite_remainders/Generators.wl out 6,5            # about 40 s
+python3 family_inputs.py out/deq.wl ../../blowup_series/families/ITER/inputs
 ```
