@@ -60,42 +60,71 @@ for n in NAMES:
         ROWS.append(tuple(np.array([k[i] for k in acc]) for i in range(3)) + (np.array(list(acc.values())),))
 
 
-# the error estimate is ERR_FACTOR times the difference of the two evaluations: against exact values (the Nc^3 layer at
-# 406 grid points, and at 30 points near the corner x, y -> 0 from the exact series) the actual error was below it for
-# 100% and 99% of the values; the raw difference is typically 1-3 times smaller than the actual error
+# the error estimate: ERR_FACTOR times the difference of the two evaluations (different paths: the path-dependent
+# integration error), plus ERR_EPS times sum |terms| of the sum over rows (the systematic error of the generators, the
+# same on every path -- the double system's matrices are rounded -- amplified by the cancellation in the sum, which
+# reaches 1e9 near the edges).  Against full-quad values (2026-10-29, 8 points x 84): the actual error divided by
+# sum |terms| was at most 5e-14 (at the corner point (1/30, 1/30)); ERR_EPS is provisional: it overestimates ~500x
+# in the median.  To be calibrated / replaced after the 1000-point study (accuracy_study/).
 ERR_FACTOR = 10
+ERR_EPS = 1e-13
 
 
-def remainders_from(points, T):
-    """the 84 remainders from generator values T (npts, 579) at the points"""
+def remainders_from(points, T, rsign=1, absolute=False):
+    """the 84 remainders from generator values T (npts, 579) at the (physical) points; r = rsign Sqrt[x y z]
+    (rsign = -1 in the production regions: the continued root).  absolute=True: sum |terms| instead (real)"""
     P = np.asarray(points, float)
     t, u = P[:, 1], 1 - P[:, 0] - P[:, 1]
     RF = np.array([f(t, u) * np.ones_like(t) for f in _RFB]).T          # (npts, 129)
-    rr = np.sqrt(P[:, 0] * P[:, 1] * (1 - P[:, 0] - P[:, 1]))
-    out = np.zeros((len(P), len(KEYS)), complex)
+    rr = rsign * np.sqrt(P[:, 0] * P[:, 1] * (1 - P[:, 0] - P[:, 1]))
+    out = np.zeros((len(P), len(KEYS)), float if absolute else complex)
     for j, (r, g, k, c) in enumerate(ROWS):
-        out[:, j] = (RF[:, r] * T[:, g] * rr[:, None] ** k) @ c
+        if absolute:
+            out[:, j] = np.abs(RF[:, r] * T[:, g] * rr[:, None] ** k) @ np.abs(c)
+        else:
+            out[:, j] = (RF[:, r] * T[:, g] * rr[:, None] ** k) @ c
     return out
 
 
-def evaluate_remainders(points, tol=1e-10, error=False):
-    """the 84 remainders at the points.  A point closer than gen_eval.NEAR to a spurious curve (letters 11-16) is
-    replaced by the symmetric average of the remainders across the curve (gen_eval.plan): this covers both the
-    poles of the DE and those of the rational functions (letters 15, 16), which cancel in the remainder.
-    error=True: every point is evaluated again, from independent start values (gen_eval.second_data) and on a
-    different complexified path (and, for an averaged point, with half the stencil step); ERR_FACTOR times the
-    absolute difference is returned as an error estimate: (R, info, err).  Near the edges of the triangle the rational
-    functions (up to 1/x^3, 1/y^3, 1/z^3, and (x+y)^-5 etc. at the corners) cancel against large logarithms, and
-    double precision loses digits there; the estimate shows how many."""
-    flat, pl = gen_eval.plan([tuple(p) for p in points])
-    T, infos = gen_eval.evaluate_direct(flat, tol)
-    R, info = gen_eval.collapse(remainders_from(flat, T), infos, pl)
+def evaluate_remainders(points, tol=1e-10, error=False, region='decay'):
+    """the 84 remainders at the points: (x, y) of the decay triangle, or (X, Y) of the triangle of a production region
+    ('x', 'y', 'z': A > 1, see REGION_MAP; out/region_<A>_bs.bin, rational functions at the physical point, continued
+    root r = -Sqrt[x y z]).  A point closer than NEAR to a spurious curve is replaced by the symmetric average across
+    the curve (gen_eval.plan, with the letters of the region): this covers both the poles of the DE and those of the
+    rational functions, which cancel in the remainder.
+    error=True: every point is evaluated again on a different complexified path (and, for an averaged point, with half
+    the stencil step); the error estimate ERR_FACTOR |difference| + ERR_EPS sum |terms| is returned: (R, info, err).
+    Near the edges of the triangle the rational functions (up to 1/x^3, 1/y^3, 1/z^3, and (x+y)^-5 etc. at the corners)
+    cancel against large logarithms, and double precision loses digits there; the estimate shows how many."""
+    if region == 'decay':
+        data, data2, rsign, phys = DATA_DECAY, gen_eval.second_data(), 1, (lambda P: P)
+    else:
+        data = data2 = os.path.join(HERE, 'out', 'region_%s_bs.bin' % region)
+        rsign, phys = -1, (lambda P: region_to_phys(region, P))
+    flat, pl = gen_eval.plan([tuple(p) for p in points], region=region)
+    T, infos = gen_eval.evaluate_direct(flat, tol, data=data, region=region)
+    R, info = gen_eval.collapse(remainders_from(phys(flat), T, rsign), infos, pl)
     if not error:
         return R, info
-    flat2, pl2 = gen_eval.plan([tuple(p) for p in points], hfac=0.5)
-    T2, infos2 = gen_eval.evaluate_direct(flat2, tol, data=gen_eval.second_data(), second=True)
-    R2, _ = gen_eval.collapse(remainders_from(flat2, T2), infos2, pl2)
-    return R, info, ERR_FACTOR * np.abs(R - R2)
+    flat2, pl2 = gen_eval.plan([tuple(p) for p in points], hfac=0.5, region=region)
+    T2, infos2 = gen_eval.evaluate_direct(flat2, tol, data=data2, second=True, region=region)
+    R2, _ = gen_eval.collapse(remainders_from(phys(flat2), T2, rsign), infos2, pl2)
+    S, _ = gen_eval.collapse(remainders_from(phys(flat), T, rsign, absolute=True), infos, pl)
+    return R, info, ERR_FACTOR * np.abs(R - R2) + ERR_EPS * np.abs(S)
+
+
+DATA_DECAY = gen_eval.DATA
+REGION_MAP = {'z': lambda X, Y, Z: (-X / Z, -Y / Z), 'x': lambda X, Y, Z: (1 / Z, -X / Z), 'y': lambda X, Y, Z: (-X / Z, 1 / Z)}
+
+
+def region_to_phys(region, points):
+    """points (X, Y) of the triangle of the production region A > 1 (A = 1/Z) -> physical (x, y)"""
+    return [REGION_MAP[region](X, Y, 1 - X - Y) for X, Y in points]
+
+
+def evaluate_remainders_region(region, points, tol=1e-12, error=False):
+    """the 84 remainders in the production region A > 1 at points (X, Y) of its triangle: evaluate_remainders"""
+    return evaluate_remainders(points, tol, error, region=region)
 
 
 if __name__ == '__main__':

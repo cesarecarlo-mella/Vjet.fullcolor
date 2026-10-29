@@ -25,18 +25,21 @@ SING = {1: lambda x, y: x, 2: lambda x, y: y, 3: lambda x, y: 1 - x - y, 4: lamb
         6: lambda x, y: x + y, '7': lambda x, y: x * (1 - x - y) + y, '8': lambda x, y: x * y + 1 - x - y,
         11: lambda x, y: x - y + y * y, 12: lambda x, y: -x + x * x + y, 13: lambda x, y: (x - 1) ** 2 - y,
         14: lambda x, y: -y + (x + y) ** 2, 15: lambda x, y: -x + (x + y) ** 2, 16: lambda x, y: -x + (1 - y) ** 2}
+# letters that enter only in the production regions (in the region's own variables X, Y; see PROFILES)
+SING_REGION = {9: lambda x, y: 1 - y - x * y, 10: lambda x, y: 1 - x - x * y, 17: lambda x, y: x + x * y + y * y,
+               18: lambda x, y: x * x + y + x * y, 19: lambda x, y: (y - 1) ** 2 + x * y, 20: lambda x, y: (x - 1) ** 2 + x * y}
 DEFORM = [(0.1, 0.2), (0.15, 0.25), (0.25, 0.1), (-0.15, -0.25), (0.2, 0.3), (-0.25, -0.1)]
 MARGIN = 1e-3                                       # minimal distance (in t) of a zero from the open path
 
 
-def path_margin(P, d):
-    """smallest distance, in the path parameter, of a complex zero of SING from the segment 0 < t < 1, and its key;
+def path_margin(P, d, region='decay'):
+    """smallest distance, in the path parameter, of a complex zero of a letter from the segment 0 < t < 1, and its key;
     zeros at the end point t = 1 itself (P on a curve) are not counted: no deformation can avoid them"""
     ts = np.linspace(0, 1, 5)
     X = P0[0] + (ts + 4j * d[0] * ts * (1 - ts)) * (P[0] - P0[0])
     Y = P0[1] + (ts + 4j * d[1] * ts * (1 - ts)) * (P[1] - P0[1])
     best = (np.inf, None)
-    for k, f in SING.items():
+    for k, f in profile(region)['sing'].items():
         c = np.polyfit(ts, f(X, Y), 4)
         c = c[np.argmax(np.abs(c) > 1e-14 * np.abs(c).max()):]
         for r in (np.roots(c) if len(c) > 1 else []):
@@ -47,10 +50,10 @@ def path_margin(P, d):
     return best
 
 
-def choose_deformation(P, second=False):
+def choose_deformation(P, second=False, region='decay'):
     """the default deformation if the path keeps MARGIN from every zero, else the one with the largest margin.
     second: a different deformation (the best of the others), for an independent second evaluation"""
-    m = [path_margin(P, d)[0] for d in DEFORM]
+    m = [path_margin(P, d, region)[0] for d in DEFORM]
     first = 0 if m[0] >= MARGIN else int(np.argmax(m))
     if not second:
         return DEFORM[first]
@@ -93,27 +96,52 @@ NEAR = {11: 1e-8, 12: 1e-8, 13: 1e-8, 14: 1e-8,    # poles of the DE only: the d
         15: 1e-5, 16: 1e-5}                         # also poles of the rational functions: digits lost closer than this
 H = 1e-3                                            # stencil step, at most rho / 100 (O(h^6) error ~ 36 (h/rho)^6)
 
+# Production regions (region_build.py): the region's triangle in its own variables (X, Y) carries the same 20 letter
+# functions, and the region's system is A'_j = sum_k c_kj A_k (out/region_<A>.json: letter_map[k][j] = c_kj).  Its
+# letters are the j reached from the decay letters in use; its spurious curves are those among 11-16, and the rational
+# functions (decay letters 15, 16 in their denominators) have poles on the images of 15 and 16.
+_PROFILES = {}
 
-def spurious_near(P):
+
+def profile(region='decay'):
+    """letters (for the path check), spurious letters and their NEAR thresholds of the decay triangle or a region"""
+    if region not in _PROFILES:
+        if region == 'decay':
+            _PROFILES[region] = dict(sing=SING, spurious=SPURIOUS, near=NEAR)
+        else:
+            cmap = json.load(open(os.path.join(HERE, 'out', 'region_%s.json' % region)))['letter_map']
+            used = [1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16]
+            img = lambda k: {int(j) for j, c in cmap[str(k)].items() if c}
+            lets = set().union(*[img(k) for k in used])
+            pole = img(15) | img(16)
+            allf = {**SING, **SING_REGION}
+            sing = {(str(j) if j in (7, 8) else j): allf[str(j) if j in (7, 8) else j] for j in sorted(lets)}
+            spur = tuple(j for j in sorted(lets) if 11 <= j <= 16)
+            _PROFILES[region] = dict(sing=sing, spurious=spur, near={j: 1e-5 if j in pole else 1e-8 for j in spur})
+    return _PROFILES[region]
+
+
+def spurious_near(P, region='decay'):
     """(distance, unit normal, letter) of the closest spurious curve if it is closer than NEAR[letter] * rho, else None"""
     x, y = P
     rho = min(x, y, 1 - x - y)
     best, e = None, 1e-7 * rho
-    for k in SPURIOUS:
-        f = SING[k]
+    pr = profile(region)
+    for k in pr['spurious']:
+        f = pr['sing'][k]
         g = np.array([(f(x + e, y) - f(x - e, y)) / (2 * e), (f(x, y + e) - f(x, y - e)) / (2 * e)])
         d = abs(f(x, y)) / np.linalg.norm(g)
-        if d < NEAR[k] * rho and (best is None or d < best[0]):
+        if d < pr['near'][k] * rho and (best is None or d < best[0]):
             best = (d, g / np.linalg.norm(g), k)
     return best
 
 
-def plan(points, hfac=1.0):
+def plan(points, hfac=1.0, region='decay'):
     """the points to integrate: each point itself, or the 6 stencil points if it is near a spurious curve
     (step hfac * min(H, rho / 100)).  Returns (flat list of points, [(start in flat, count, averaging info or None)])"""
     flat, pl = [], []
     for P in points:
-        near = spurious_near(P)
+        near = spurious_near(P, region)
         if near is None:
             pl.append((len(flat), 1, None)); flat.append(P)
             continue
@@ -186,12 +214,12 @@ def evaluate(points, tol=1e-10, binary=os.path.join(HERE, 'cpp/tridents_bs'), da
 
 
 def evaluate_direct(points, tol=1e-10, binary=os.path.join(HERE, 'cpp/tridents_bs'), data=DATA,
-                    second=False):
+                    second=False, region='decay'):
     """generators at the points themselves (path deformation chosen per point; second: on a second, different path)"""
     points = [tuple(p) for p in points]
     groups = {}
     for j, P in enumerate(points):
-        groups.setdefault(choose_deformation(P, second), []).append(j)
+        groups.setdefault(choose_deformation(P, second, region), []).append(j)
     res = [None] * len(points)
     for d, idx in groups.items():
         for j, r in zip(idx, _run_all([points[j] for j in idx], tol, binary, data, None if d == DEFORM[0] else d)):

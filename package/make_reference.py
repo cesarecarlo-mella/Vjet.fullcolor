@@ -38,3 +38,15 @@ json.dump(dict(coefficients=names, layers=layers, points=[list(p) for p in pts],
                       ('path deformation %s' % (i['delta'],) if i['delta'] != (0.1, 0.2) else '') for i in info]),
           open(os.path.join(HERE, 'tests', 'reference_values.json'), 'w'), indent=1)
 print('reference_values.json: %d points' % len(pts), [n for n in ['averaged' if i.get('averaged') else '' for i in info]])
+
+# production regions: all 84 remainders and their error estimates at 3 points (X, Y) of each region's triangle
+reg = {}
+for A in ('x', 'y', 'z'):
+    rpts = [(0.3, 0.3), (0.15, 0.6), (0.6, 0.15)]
+    R, info, err = remainder_eval.evaluate_remainders(rpts, 1e-12, error=True, region=A)
+    V, E = R[:, col], err[:, col]
+    reg[A] = dict(points=[list(p) for p in rpts],
+                  values=[[[[V[p, i, l].real, V[p, i, l].imag] for l in range(len(layers))] for i in range(6)] for p in range(len(rpts))],
+                  errors=[[[float(E[p, i, l]) for l in range(len(layers))] for i in range(6)] for p in range(len(rpts))])
+json.dump(dict(coefficients=names, layers=layers, regions=reg), open(os.path.join(HERE, 'tests', 'region_reference_values.json'), 'w'), indent=1)
+print('region_reference_values.json: 3 points in each of the regions x, y, z')

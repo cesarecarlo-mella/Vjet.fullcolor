@@ -61,4 +61,120 @@ We integrate the system from $P_0$ to $P$ along a straight path, deformed into t
 In the bulk the accuracy is about $10^{-12}$, and about $10^{-13}$ against the exact planar results. Near the edges
 double precision loses digits, which the error estimate reports; there the corner expansions take over.
 
+\section*{High-precision values at $P_0$ (27 digits)}
+
+\paragraph{1. A double series at the corner.}
+Here we use the exact system: 586 functions in an integral basis, with integer matrices $M_k$
+(\texttt{out/basis.wl}, \texttt{out/deq.wl}); the 579 $T_g$ are integer combinations of them. Near $(0,0)$ every function is
+a double series
+\[
+  F(x,y)=\sum c\;x^{a/2}\,y^{b/2}\,\log^k x\,\log^l y ,\qquad c\ \text{exact rational (times $1$ or $i$)}.
+\]
+We obtain it from the blow-up series of the ITER family: chart 1 ($x=t\,y^2$) and its mirror chart 4 ($y=t\,x^2$),
+each to order $t^{16}$ and $B^{48}$ ($B$ the other variable). We undo the blow-up: $t=x/y^2$, $\log t=\log x-2\log y$.
+\begin{itemize}
+\item No negative powers appear, and the two charts agree exactly on all $1.3\cdot10^6$ terms they share. Several
+  letters vanish at the corner ($x+y$, $x-y+y^2$, $(x+y)^2-x$, \dots), but the functions do not see them there: the
+  blow-up is needed for the rational functions only.
+\item The union of the two charts holds every term of total degree $\tfrac{a+b}2\le 32$ (the first missing one is
+  $x^{16}y^{17}$). The truncation error is about $(|x|+|y|)^{33}$: $10^{-34}$ at $(0.05,0.05)$, $10^{-27}$ at
+  $(0.08,0.08)$.
+\end{itemize}
+
+\paragraph{2. Two start points,} evaluated from the series at 40 digits:
+\[
+  S_A=(0.05,\,0.05),\qquad S_B=(0.04,\,0.06).
+\]
+
+\paragraph{3. Transport to $P_0$ in quad precision.}
+From each start point we integrate to $P_0=(0.3,0.3)$ along its own complex-deformed straight path,
+\[
+  x(t)=S_x+\bigl(t+4i\,\delta_x\,t(1-t)\bigr)(0.3-S_x),\qquad
+  y(t)=S_y+\bigl(t+4i\,\delta_y\,t(1-t)\bigr)(0.3-S_y),\qquad 0\le t\le1,
+\]
+with $\delta_A=(-0.15,\,-0.25)$ (below the real plane) and $\delta_B=(0.1,\,0.2)$ (above). The root
+$r=\sqrt{xyz}$ is integrated along ($r>0$ at $S$). The integrator is Bulirsch--Stoer (modified midpoint, up to 16
+extrapolation levels) in double-double arithmetic ($\approx32$ digits), with tolerance $10^{-32}$ relative to the largest
+function. Each path takes about one minute (\texttt{cpp/iter\_quad}, \texttt{quad\_data.py}).
+
+\begin{center}
+\begin{tikzpicture}[>=Stealth]
+  \begin{scope}[scale=6]
+    \fill[gray!8] (0,0)--(1,0)--(0,1)--cycle; \draw (0,0)--(1,0)--(0,1)--cycle;
+    \node[below left] at (0,0) {$(0,0)$}; \node[below] at (1,0) {$x$}; \node[left] at (0,1) {$y$};
+    \fill[green!50!black,opacity=0.25] (0,0)--(0.1,0)--(0,0.1)--cycle;
+    \draw[very thick,blue,->] (0.05,0.05)--(0.3,0.3);
+    \draw[very thick,red!80!black,->] (0.04,0.06)--(0.3,0.3);
+    \fill (0.3,0.3) circle (0.01) node[right=2pt] {$P_0=(0.3,0.3)$};
+    \draw[gray] (0,0) rectangle (0.1,0.1); \draw[gray] (0.1,0.1)--(0.45,0.55); \draw[gray] (0.1,0)--(0.75,0.55);
+    \node[font=\small,align=left,anchor=west] at (0.52,0.92) {green: double series\\ \phantom{green: }(error $<10^{-30}$)};
+  \end{scope}
+  \begin{scope}[shift={(2.7,3.3)},scale=18]   % zoom of the corner
+    \fill[white] (0,0) rectangle (0.1,0.1); \draw[gray] (0,0) rectangle (0.1,0.1);
+    \fill[green!50!black,opacity=0.25] (0,0)--(0.1,0)--(0,0.1)--cycle;
+    \draw[->] (0,0)--(0.1,0); \draw[->] (0,0)--(0,0.1);
+    \draw[blue,thick,->] (0.05,0.05)--(0.075,0.075); \draw[red!80!black,thick,->] (0.04,0.06)--(0.0652,0.0831);
+    \fill[blue] (0.05,0.05) circle (0.0025) node[below right,font=\small] {$S_A$};
+    \fill[red!80!black] (0.04,0.06) circle (0.0025) node[left,font=\small] {$S_B$};
+    \node[font=\scriptsize,below] at (0.1,0) {$0.1$}; \node[font=\scriptsize,left] at (0,0.1) {$0.1$};
+  \end{scope}
+  \begin{scope}[shift={(8.2,0.6)},xscale=4,yscale=40]   % imaginary displacement along the paths
+    \draw[->] (0,0)--(1.1,0) node[right] {$t$}; \draw[->] (0,-0.075)--(0,0.065) node[above] {Im};
+    \draw[gray,dotted] (0.5,-0.075)--(0.5,0.065);
+    \node[font=\scriptsize,below] at (1,0) {1};
+    \draw[blue,thick,domain=0:1,samples=40] plot (\x,{-0.15*\x*(1-\x)});
+    \draw[blue,thick,dashed,domain=0:1,samples=40] plot (\x,{-0.25*\x*(1-\x)});
+    \draw[red!80!black,thick,domain=0:1,samples=40] plot (\x,{0.104*\x*(1-\x)});
+    \draw[red!80!black,thick,dashed,domain=0:1,samples=40] plot (\x,{0.192*\x*(1-\x)});
+    \node[font=\scriptsize,anchor=west] at (0.02,0.062) {$0.05$}; \draw (-0.02,0.05)--(0.02,0.05);
+    \node[font=\scriptsize,anchor=west] at (0.02,-0.062) {$-0.05$}; \draw (-0.02,-0.05)--(0.02,-0.05);
+    \draw[red!80!black,thick] (1.15,0.05)--(1.3,0.05) node[right,font=\scriptsize,black] {Im $x_B$};
+    \draw[red!80!black,thick,dashed] (1.15,0.035)--(1.3,0.035) node[right,font=\scriptsize,black] {Im $y_B$};
+    \draw[blue,thick] (1.15,-0.035)--(1.3,-0.035) node[right,font=\scriptsize,black] {Im $x_A$};
+    \draw[blue,thick,dashed] (1.15,-0.05)--(1.3,-0.05) node[right,font=\scriptsize,black] {Im $y_A$};
+  \end{scope}
+\end{tikzpicture}
+\end{center}
+\noindent Left: the real part of the two paths (straight lines), with a zoom of the corner. Right: their imaginary
+parts along the path, $4\delta\,t(1-t)(0.3-S)$; $S_A$ runs below the real plane, $S_B$ above.
+
+\paragraph{4. Result.}
+The two determinations agree to $3\cdot10^{-28}$ relative to the largest function ($4.5\cdot10^4$), i.e.\ 27--28 digits.
+Further checks, all within $2\cdot10^{-27}$: a second path from $S_A$ ($\delta=(0.1,0.2)$), and start points $(0.06,0.06)$,
+$(0.06,0.04)$, $(0.08,0.08)$; the last differs by its series truncation, $2\cdot10^{-27}$. The average is stored in
+\texttt{out/iter\_quad\_P0.bin} (input of \texttt{cpp/iter\_quad}) and \texttt{out/P0\_values\_quad.m} (30 digits). The values
+used so far by the double evaluator (edge construction above) are off by up to $5\cdot10^{-8}$ in absolute terms
+($10^{-12}$ of the largest generator; median $10^{-13}$ relative).
+
+Two technical points: each half of a double-double number must be read back as a double (reading the decimal
+string at higher precision costs a factor $10^{15}$), and the extrapolation weights $n_{k-j}^2/(n_k^2-n_{k-j}^2)$ must
+be exact in double-double (in double they cap the accuracy at $10^{-24}$).
+
+\paragraph{5. Into the double evaluator.} The quad values replace the start values of the double evaluator. The two
+systems are two bases of the same 503-dimensional space (weights $0,\dots,6$: $1, 5, 24, 75, 113, 261, 24$):
+\begin{itemize}
+\item the \textbf{503 system} (double): an orthonormal basis, floating-point matrices with entries $|A|\le1$;
+\item the \textbf{586 system} (series, quad): integer matrices. Weights $0$--$4$ and $6$ have a true integral basis with the
+  same counts. At weight 5 it keeps a redundant spanning set of 344 functions for 261 dimensions: the 247 generators
+  and 97 derivatives of the weight-6 generators. A true integral basis there would need huge integers.
+\end{itemize}
+The 503 states are exact rational combinations of the 586 functions (\texttt{quad\_p0\_to\_double.py}). With the quad
+start values, the two evaluations of the error estimate share their start, so they differ only by the path. The
+estimate adds a term $\epsilon\sum|\text{terms}|$ for the systematic error of the double system, which is the same on
+every path.
+
+\section*{Production regions}
+Each production region has its own triangle $(X,Y)$ and hub $(0.3,0.3)$ (\texttt{notes/continuation\_notes.tex}). Its
+start values at the hub are obtained in quad as in the decay, but without a series. We integrate from the decay values
+at $P_0$ to the physical image of the hub, along a complex-deformed straight path. On it the two variables that become
+negative cross zero with a positive imaginary part, which is the Feynman prescription; the root arrives at
+$-\sqrt{|xyz|}$.
+\begin{itemize}
+\item Two such paths agree to $10^{-27}$ in all three regions.
+\item The continuation through the corner, used before, agrees with them to $10^{-11}$: an independent check of the
+  continuation.
+\item The region's integer system ($M'_j=\sum_k c_{kj}M_k$) is integrated from the hub to another point of the region.
+  It agrees with a direct path from $P_0$ to $10^{-27}$.
+\end{itemize}
+
 \end{document}

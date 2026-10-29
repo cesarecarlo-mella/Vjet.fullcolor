@@ -1,0 +1,520 @@
+{
+ "source": "reproduceLC/2024_Vjet_3L_LC_ancillary/FiniteRemainders lmL.m (alpha[i,3]), lpL.m (gamma[i,3]), evaluated with GiNaC at 25 digits; layers from evaluations at several (Nc, Nf)",
+ "region": "y",
+ "points": [
+  [
+   0.5,
+   0.2
+  ],
+  [
+   0.49999999999999994,
+   0.3
+  ],
+  [
+   0.25,
+   0.15
+  ]
+ ],
+ "uv": [
+  [
+   0.2,
+   0.3
+  ],
+  [
+   0.3,
+   0.2
+  ],
+  [
+   0.15,
+   0.6
+  ]
+ ],
+ "values": [
+  {
+   "point": 0,
+   "coefficient": "alpha1",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    3.8046514286271393,
+    -35.16906604428086
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha1",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -2.163112878564346,
+    13.602955406168707
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha1",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    0.35766523958840546,
+    -0.9697984866661713
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha2",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    -39.64312896052108,
+    18.821316275671055
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha2",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    20.664654061606832,
+    -9.094264745205798
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha2",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    -1.0440289520559176,
+    0.559919470749044
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha3",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    -25.15302758637696,
+    27.72794547120585
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha3",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    26.72988858101034,
+    -12.570307324304633
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "alpha3",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    -0.9998018845648957,
+    0.7731239091193878
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha1",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    -0.4198157205181449,
+    -10.56493685673707
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha1",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    0.1211305154900533,
+    4.094637470349681
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha1",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    0.04867860082776215,
+    -0.2860157795825593
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha2",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    2.2618057371747367,
+    -6.880631562711922
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha2",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    0.7896948521229216,
+    3.0592091868080056
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha2",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    0.1636342313191066,
+    -0.1763701504912163
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha3",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    36.0470441399493,
+    -27.331306897263815
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha3",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -4.69265479151964,
+    13.055570602651166
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "alpha3",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    1.1060106328127475,
+    -0.6922822930910684
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha1",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    55.6477845125179,
+    -131.83589324142181
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha1",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -26.22754644641388,
+    52.775906509630744
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha1",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    2.9279691512822126,
+    -3.9359587097410156
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha2",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    -343.3161668852684,
+    350.57964988071944
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha2",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    187.19358118139004,
+    -164.5224505747828
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha2",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    -17.74449672945576,
+    11.828440343362388
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha3",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    52.76462927746138,
+    61.9256323983339
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha3",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    15.008325953083077,
+    -27.68756066386891
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "alpha3",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    -2.321658588310484,
+    1.2772478335966753
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma1",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    38.59372657538743,
+    4.603965791687167
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma1",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -16.451370587201723,
+    -0.6294100048770768
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma1",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    1.2521195115257058,
+    0.015842201953043755
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma2",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    303.58886860527247,
+    -106.18105746635045
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma2",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -132.858784653511,
+    51.365302759973794
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma2",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    10.663287582367388,
+    -3.5465488290609954
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma3",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    379.34326753333346,
+    -191.17048773223246
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma3",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -181.9656663880466,
+    89.38424807048176
+   ]
+  },
+  {
+   "point": 0,
+   "coefficient": "gamma3",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    15.381706296198956,
+    -6.027447563562816
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma1",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    9.270538099368485,
+    1.8968601532587572
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma1",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -4.032731235792045,
+    -0.2872967536010007
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma1",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    0.28193982948950413,
+    0.010204440007210325
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma2",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    63.718553481242616,
+    -16.14645078917214
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma2",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -28.211316849835494,
+    9.9532839844012
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma2",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    2.100616652821664,
+    -0.7957682242126936
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma3",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    134.10231607746726,
+    -46.081898478260754
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma3",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -64.10089943767842,
+    26.465202230342168
+   ]
+  },
+  {
+   "point": 1,
+   "coefficient": "gamma3",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    4.978323429393868,
+    -2.021720843584731
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma1",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    211.85597146956658,
+    16.005633047169013
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma1",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -93.96747980562682,
+    -2.1487501978017844
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma1",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    8.091627559728181,
+    0.02948733517832025
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma2",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    1702.6805035136956,
+    -672.0316053014626
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma2",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -802.8369638597871,
+    319.20322108757375
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma2",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    75.2907499258913,
+    -22.88908663973234
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma3",
+   "layer": "Nc^3*Nf^0*NfZ^0",
+   "value": [
+    1272.8562274998026,
+    -870.6449454128177
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma3",
+   "layer": "Nc^2*Nf^1*NfZ^0",
+   "value": [
+    -677.5008567107363,
+    405.02193657762024
+   ]
+  },
+  {
+   "point": 2,
+   "coefficient": "gamma3",
+   "layer": "Nc^1*Nf^2*NfZ^0",
+   "value": [
+    68.60810075550239,
+    -29.00187846727283
+   ]
+  }
+ ]
+}

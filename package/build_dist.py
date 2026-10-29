@@ -21,6 +21,8 @@ FILES = {                                            # destination -> source
     'tests/run_tests.py': os.path.join(HERE, 'tests', 'run_tests.py'),
     'tests/lc_reference.json': os.path.join(HERE, 'tests', 'lc_reference.json'),
     'tests/reference_values.json': os.path.join(HERE, 'tests', 'reference_values.json'),
+    'tests/region_reference_values.json': os.path.join(HERE, 'tests', 'region_reference_values.json'),
+    'tests/region_lc_reference.json': os.path.join(HERE, 'tests', 'region_lc_reference.json'),
     'core/gen_eval.py': os.path.join(G, 'gen_eval.py'),
     'core/remainder_eval.py': os.path.join(G, 'remainder_eval.py'),
     'core/out/meta.json': os.path.join(G, 'out', 'meta.json'),
@@ -28,11 +30,26 @@ FILES = {                                            # destination -> source
     'core/out/start_y.head': os.path.join(G, 'out', 'start_y.head'),
     'core/cpp/tridents_bs.cpp': os.path.join(G, 'cpp', 'tridents_bs.cpp'),
     'core/cpp/third_party.tar.gz': os.path.join(G, 'cpp', 'third_party.tar.gz'),
+    'core/quad_eval.py': os.path.join(G, 'quad_eval.py'),
+    'core/quad_data.py': os.path.join(G, 'quad_data.py'),
+    'core/remainder_quad.py': os.path.join(G, 'remainder_quad.py'),
+    'core/ddnp.py': os.path.join(G, 'ddnp.py'),
+    'core/cpp/iter_quad.cpp': os.path.join(G, 'cpp', 'iter_quad.cpp'),
+    'core/cpp/dd.hpp': os.path.join(G, 'cpp', 'dd.hpp'),
+    'core/out/iter_quad_P0.bin': os.path.join(G, 'out', 'iter_quad_P0.bin'),
+    'core/out/P0_values_quad.m': os.path.join(G, 'out', 'P0_values_quad.m'),
+    'core/out/generators.wl': os.path.join(G, 'out', 'generators.wl'),
+    'core/out/labels.m': os.path.join(G, 'out', 'labels.m'),
+}
+for A in ('x', 'y', 'z'):                            # production regions: double (503 system) and quad (586 system) data
+    for f in ('region_%s_bs.bin', 'region_%s.json', 'region_%s_iter_quad.bin'):
+        FILES['core/out/' + f % A] = os.path.join(G, 'out', f % A)
+FILES.update({
     'amplitudes/Alphabet20.wl': os.path.join(Z, 'Alphabet20.wl'),
     'amplitudes/Generators.wl': os.path.join(Z, 'Generators.wl'),
     'amplitudes/RationalFunctionBasis.wl': os.path.join(Z, 'RationalFunctionBasis.wl'),
     'amplitudes/TranscendentalMultipliers.wl': os.path.join(Z, 'TranscendentalMultipliers.wl'),
-}
+})
 for n in ('alpha1', 'alpha2', 'alpha3', 'gamma1', 'gamma2', 'gamma3'):
     FILES['amplitudes/FiniteRemainders/%s.wl' % n] = os.path.join(Z, 'FiniteRemainders', n + '.wl')
 

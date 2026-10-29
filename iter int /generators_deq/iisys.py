@@ -316,18 +316,26 @@ def propagate(S, forms, s_end, y_init, T_init, N):
     return vals, T
 
 
-def start_values(S, base='x', edge=0.5, eps=0.02, N=60, dps=40):
+def start_values(S, base='x', edge=0.5, eps=0.02, N=60, dps=40, y_init=None, T_init=None):
     """values at the point near c1 reached by the nested regularised path:
        base 'x': x -> 0 first: along x = 0 from y = 0 to y = edge, then x = s^2 from 0 to eps at y = edge
-       base 'y': the mirror.   Returns (point, y_w values, T (7, NT))."""
+       base 'y': the mirror.   Returns (point, y_w values, T (7, NT)).
+       y_init, T_init: the regularised values at the corner (default: those of the base point, 0 above weight 0);
+       non-zero for a production region, whose corner is the decay corner continued."""
     mp.mp.dps = dps
     NT = S['R'][1, 1].shape[0]
     zero = [mp.mpf(0)]
     one_s = [mp.mpf(0), mp.mpf(1)]
-    T0 = np.zeros((7, NT), complex)
-    T0[0] = S['const']
-    y0 = {w: np.zeros(S['dims'][w], complex) for w in range(6)}
-    y0[0] = np.array([1.0 + 0j])
+    if T_init is None:
+        T0 = np.zeros((7, NT), complex)
+        T0[0] = S['const']
+    else:
+        T0 = np.array(T_init, complex)
+    if y_init is None:
+        y0 = {w: np.zeros(S['dims'][w], complex) for w in range(6)}
+        y0[0] = np.array([1.0 + 0j])
+    else:
+        y0 = {w: np.array(y_init[w], complex) for w in range(6)}
     e = mp.mpf(edge)
     s2 = [mp.mpf(0), mp.mpf(0), mp.mpf(1)]
     if base == 'x':
