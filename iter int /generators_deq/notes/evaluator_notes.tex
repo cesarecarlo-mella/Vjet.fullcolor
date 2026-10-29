@@ -164,17 +164,37 @@ estimate adds a term $\epsilon\sum|\text{terms}|$ for the systematic error of th
 every path.
 
 \section*{Production regions}
-Each production region has its own triangle $(X,Y)$ and hub $(0.3,0.3)$ (\texttt{notes/continuation\_notes.tex}). Its
-start values at the hub are obtained in quad as in the decay, but without a series. We integrate from the decay values
-at $P_0$ to the physical image of the hub, along a complex-deformed straight path. On it the two variables that become
-negative cross zero with a positive imaginary part, which is the Feynman prescription; the root arrives at
-$-\sqrt{|xyz|}$.
+Each production region $A>1$ has its own triangle $(X,Y)$, $Z=1-X-Y=1/A$, and its own hub $(0.3,0.3)$
+(\texttt{notes/continuation\_notes.tex}). Its start values $P_0$ are defined exactly as in the decay:
+\begin{enumerate}
+\item \textbf{The corner series, continued.} The region's corner $X,Y\to0$ (threshold) is a decay corner, and its two
+  small variables are $(-X/Z,\,-Y/Z)$. Both cross zero from above (Feynman prescription): $\log s\to\log|s|+i\pi$,
+  $\sqrt s\to i\sqrt{|s|}$ for each, so that $r\to-\sqrt{|xyz|}$.
+\item \textbf{Two start points, two quad paths} to the hub, with the region's integer system $M'_j=\sum_k c_{kj}M_k$.
+\end{enumerate}
+\begin{center}\small
+\begin{tabular}{llllll}
+region & corner & series & start points $(X,Y)$ & truncation & two paths agree \\ \hline
+$z$ & $c_1$: $x,y\to0$ & double series (charts 1, 4) & $(0.05,0.05)$, $(0.04,0.06)$ & $10^{-33}$ & $1.5\cdot10^{-27}$ \\
+$x$ & $c_2$: $y,z\to0$ & chart 5: $y=t\,z^2$ & $(0.001,0.2)$, $(0.0005,0.15)$ & $2\cdot10^{-29}$ & $1.9\cdot10^{-27}$ \\
+$y$ & $c_3$: $x,z\to0$ & chart 3: $x=t\,z^2$ & $(0.001,0.2)$, $(0.0005,0.15)$ & $5\cdot10^{-30}$ & $2.5\cdot10^{-27}$
+\end{tabular}
+\end{center}
 \begin{itemize}
-\item Two such paths agree to $10^{-27}$ in all three regions.
-\item The continuation through the corner, used before, agrees with them to $10^{-11}$: an independent check of the
-  continuation.
-\item The region's integer system ($M'_j=\sum_k c_{kj}M_k$) is integrated from the hub to another point of the region.
-  It agrees with a direct path from $P_0$ to $10^{-27}$.
+\item \textbf{Why charts at $c_2$, $c_3$.} There the functions are \emph{not} double series in the two small variables:
+  undoing the blow-up leaves negative powers already at weight 1. The letter $1-x=y+z$ (at $c_2$), resp.\ $1-y=x+z$ (at
+  $c_3$), vanishes at the corner, and the non-transversal letters are seen. So we use the exact series in one chart.
+  It is continued with $\log t\to\log|t|-i\pi$ and $\log B\to\log|B|+i\pi$ ($t=\text{SMALL}/\text{BIG}^2<0$), and
+  evaluated at small $|t|\approx0.02$, i.e.\ close to the edge $X=0$. At $c_1$ the functions are a double series, as in
+  the decay.
+\item \textbf{The series are exact.} The orders are 16 in $t$ and 48 in $B$, with exact boundary constants. In the decay,
+  the chart 3 and 5 series agree with a quad integration from $P_0$ to $10^{-27}$.
+\item \textbf{Cross-check (not the definition).} A quad integration from the decay $P_0$ straight to the physical image
+  of the hub, along a path that respects the prescription, agrees with the hub values to $8\cdot10^{-28}$ (region $z$),
+  $8\cdot10^{-28}$ ($x$) and $2\cdot10^{-27}$ ($y$). The earlier double continuation through the corner agrees to
+  $10^{-11}$, its own precision.
+\item \sloppy\textbf{Files.} \texttt{region\_p0.py}; \texttt{out/region\_<A>\_P0\_values\_quad.m},
+  \texttt{out/region\_<A>\_iter\_quad.bin} (quad), and the head of \texttt{out/region\_<A>\_bs.bin} (double).
 \end{itemize}
 
 \end{document}
