@@ -4,9 +4,16 @@ Plots of the full-colour three-loop finite remainders (not of the iterated integ
 
 | file | content |
 |---|---|
-| `region_z_alpha1_re.png`, `region_z_alpha1_im.png` | α1, real / imaginary part, production region z > 1, all 14 colour layers, over the region's triangle (X, Y) |
-| `region_z_alpha1_phys_re.png`, `region_z_alpha1_phys_im.png` | the same in physical variables: energy log10 z (z = s23/q², 1.05 to 1000) against the collinear variable ξ = x/(x+y) = s12/(s12+s13) |
+| `region_z_alpha1_uv_re.png`, `region_z_alpha1_uv_im.png` | α1, real / imaginary part, production region z > 1, all 14 colour layers, in (u, v) |
+| `plot_region_layers.py` | the script: `plot_region_layers.py --region z --coef alpha1 [--n 30]` (any region and coefficient) |
+| `region_z_alpha1_uv.npz` | the evaluated values (cache of the script) |
 
-- Height: asinh(value/s), with s the median |value| of the layer (linear near 0, logarithmic in the tails).
-- Data: 900 points from the double region evaluator, made on 2026-10-29 before the quad start values of the regions.
-- The script that made these was a one-off and is not in the repository; to be redone with a saved script.
+- Variables: v = 1/z (inverse energy), u = −y/z, w = −x/z = 1 − u − v. v → 1 is threshold, v → 0 high energy.
+- Shown: 0.02 ≤ v ≤ 0.3 (z ≥ 3.3), 0.02 from the edges u = 0 and w = 0 (`--vmax` changes the cut).
+- Height: the value itself (q² = 1), no rescaling.
+- Layers in the order of the colour table: Nc³ first, Nc⁻³ last.
+- Data: the double evaluator of the repository, with the region's start values from the continued corner series
+  (commit 1043025); 756 points.
+- Why the cut: towards threshold (v → 1) the coefficients grow like (1−v)⁻ᵏ (e.g. (x+y)⁻⁵ = −v⁵/(1−v)⁵), and towards
+  high energy (v → 0) they go to zero. On a linear scale threshold dominated everything (50–100× the bulk), so it
+  is cut. The remaining large values are the collinear edges u → 0 (y → 0) and w → 0 (x → 0).
